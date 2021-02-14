@@ -7,6 +7,7 @@ public:
 	PuertoSerie();
 	PuertoSerie(const char* PuertoCom, unsigned long Velocidad);
 	PuertoSerie(System::String^PuertoCom, unsigned long Velocidad);
+	PuertoSerie(System::String^PuertoCom, System::String^Velocidad);
 	~PuertoSerie();
 
 	void inicializa(const char* PuertoCom, unsigned long Velocidad);

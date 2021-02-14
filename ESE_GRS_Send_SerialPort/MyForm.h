@@ -25,7 +25,9 @@ namespace ESE_GRS_Send_COM {
 		bool txt,errtxt;
 		unsigned int contLineas,contContLineas;
 		bool inicarTransmiciones,Boolcont,firstEntry;
-	
+	private: System::Windows::Forms::ComboBox^  comboBoxSpeed;
+	public: 
+
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -97,12 +99,13 @@ namespace ESE_GRS_Send_COM {
 			this->radioButtonTXT = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButtonBinary = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButtonTXTBinary = (gcnew System::Windows::Forms::RadioButton());
+			this->comboBoxSpeed = (gcnew System::Windows::Forms::ComboBox());
 			this->SuspendLayout();
 			// 
 			// labelPuerto
 			// 
 			this->labelPuerto->AutoSize = true;
-			this->labelPuerto->Location = System::Drawing::Point(75, 21);
+			this->labelPuerto->Location = System::Drawing::Point(20, 21);
 			this->labelPuerto->Name = L"labelPuerto";
 			this->labelPuerto->Size = System::Drawing::Size(82, 13);
 			this->labelPuerto->TabIndex = 1;
@@ -112,7 +115,7 @@ namespace ESE_GRS_Send_COM {
 			// 
 			this->comboBoxPuerto->FormattingEnabled = true;
 			this->comboBoxPuerto->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"COM1", L"COM2"});
-			this->comboBoxPuerto->Location = System::Drawing::Point(78, 37);
+			this->comboBoxPuerto->Location = System::Drawing::Point(23, 37);
 			this->comboBoxPuerto->Name = L"comboBoxPuerto";
 			this->comboBoxPuerto->Size = System::Drawing::Size(70, 21);
 			this->comboBoxPuerto->TabIndex = 3;
@@ -223,11 +226,22 @@ namespace ESE_GRS_Send_COM {
 			this->radioButtonTXTBinary->UseVisualStyleBackColor = true;
 			this->radioButtonTXTBinary->CheckedChanged += gcnew System::EventHandler(this, &ESE_GRS_Form::radioButtonTXTBinary_CheckedChanged);
 			// 
+			// comboBoxSpeed
+			// 
+			this->comboBoxSpeed->FormattingEnabled = true;
+			this->comboBoxSpeed->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"9600", L"115200"});
+			this->comboBoxSpeed->Location = System::Drawing::Point(138, 37);
+			this->comboBoxSpeed->Name = L"comboBoxSpeed";
+			this->comboBoxSpeed->Size = System::Drawing::Size(70, 21);
+			this->comboBoxSpeed->TabIndex = 13;
+			this->comboBoxSpeed->Text = L"9600";
+			// 
 			// ESE_GRS_Form
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(235, 297);
+			this->Controls->Add(this->comboBoxSpeed);
 			this->Controls->Add(this->radioButtonTXTBinary);
 			this->Controls->Add(this->radioButtonBinary);
 			this->Controls->Add(this->radioButtonTXT);
@@ -293,13 +307,13 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 			
 			 if(inicarTransmiciones==false)
 				  {
-					 label1->Visible=false;
+					label1->Visible=false;
 				    button1->Text="Detener";
 					this->button1->BackColor = Drawing::Color::Red;
 			        inicarTransmiciones=true;
 					if(puerto->EstaConectado())
 						puerto->~PuertoSerie();
-					puerto=new PuertoSerie(comboBoxPuerto->Text,9600);		
+					puerto=new PuertoSerie(comboBoxPuerto->Text,comboBoxSpeed->Text);		
 					enviaDatos->Enabled=true;
 				 }
 				 else

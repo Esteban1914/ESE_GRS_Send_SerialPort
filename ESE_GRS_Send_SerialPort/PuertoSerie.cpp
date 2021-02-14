@@ -20,7 +20,22 @@ PuertoSerie::PuertoSerie()
 	const char*c=context.marshal_as<const char*>(PuertoCom);
 	inicializa(c,Velocidad);
 }
-
+ PuertoSerie::PuertoSerie(System::String^PuertoCom, System::String^Velocidad):IsConectado(false)
+{
+	msclr::interop::marshal_context context;
+	const char*c=context.marshal_as<const char*>(PuertoCom);
+	const char*c1=context.marshal_as<const char*>(Velocidad);
+	for(unsigned i=0;i<strlen(c1);i++)
+		{
+			if(!isdigit(c1[i]))
+		    {
+              error=true;
+	          errorstr="ERROR: Wrong Speed";
+			  return;
+		    }
+	    }
+	inicializa(c,long::Parse(Velocidad));
+}
 PuertoSerie::~PuertoSerie()
 {
 	if(IsConectado)
