@@ -356,10 +356,13 @@ private: System::Void radioButtonTXT_CheckedChanged(System::Object^  sender, Sys
 		 }
 	}
 private: System::Void radioButtonBinary_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
-			  inicarTransmiciones=false;
-			  label1->Visible=false;
+			 inicarTransmiciones=false;
+			 label1->Visible=false;
+			 if(radioButtonBinary->Checked==true)
 			  textBoxDatos->Text="0000000100000111";
-		 }
+			 else
+				 textBoxDatos->Text="";
+		   }
 private: System::Void radioButtonTXTBinary_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 inicarTransmiciones=false;
 		 if(!txt)
@@ -675,7 +678,7 @@ public:void iniciarEnvio(){
 public:void ToBinary(System::Windows::Forms::TextBox^s,bool text){
 			  
 			  
-			  if(s->Text->Length!=2&&s->Text->Length!=16)
+			  if(s->Text->Length%8!=0)
 			                   {
 								
 			                     label1->Location=Drawing::Point(0,223);
@@ -689,29 +692,16 @@ public:void ToBinary(System::Windows::Forms::TextBox^s,bool text){
 
 						  msclr::interop::marshal_context context;
 						  const char*c=context.marshal_as<const char*>(s->Text);
-						  if(strlen(c)==2)
-						  {
-						       char*caracter=new char[3];
-							   caracter[0]=c[0];
-							   caracter[1]=c[1];
-							   caracter[2]=0;
-							   if(strlen(caracter)!=0)
-							   puerto->Trasmitir(caracter);
-							   if(!text)
-								   {
-									label1->Text="Enviado";
-						            label1->Location=Drawing::Point(100,223);
-						            label1->Visible=true;
-						            label1->BackColor = Drawing::Color::Lime;
-						            inicarTransmiciones=false;
-							      }
-						  }
-						  else
-						  {
-				          bool error0=false;
+						  bool error0=false;
 						  for(int i=0;i<s->Text->Length;i++)
 						    {
-							if(c[i]=='1')
+							if(i!=0&&i%8==0)
+							{
+								if(error0==false)
+									break;
+								error0=false;
+							}
+								if(c[i]=='1')
 								error0=true;
 							 if(c[i]!='0'&& c[i]!='1')
 							   {
@@ -734,7 +724,37 @@ public:void ToBinary(System::Windows::Forms::TextBox^s,bool text){
 						        System::Windows::Forms::MessageBox::Show("Error no puede enviar un binario con todos 0");
 							    return;
 						  }
-						  int decimd=0,multi=1,decimf=0;
+						  unsigned strleN=(strlen(c)/8);
+						  char*ch=new char[strleN+1];
+						  ch[strleN]=0;
+						  unsigned aument=0;
+						  for(int i=strleN-1;i>=0;i--)
+						  {
+							  int decimd=0,multi=1;
+							  char*d=new char[8];
+							  for(unsigned ii=0;ii<8;ii++)
+								  d[ii]=c[aument++];
+							   for(int iii=7;iii>=0;iii--)
+	                              {
+		                            if(d[iii]=='1')
+			                           decimd+=multi;
+									multi*=2;
+	                               }
+							   ch[i]=decimd;
+						  }
+						   if(strlen(ch)!=0)
+							   puerto->Trasmitir(ch);
+						    if(!text)
+								   {
+									 label1->Text="Enviado";
+						             label1->Location=Drawing::Point(100,223);
+						             label1->Visible=true;
+						             label1->BackColor = Drawing::Color::Lime;
+						             inicarTransmiciones=false;
+							    }
+						
+				          
+						  /*int decimd=0,multi=1,decimf=0;
 							  char*d=new char[8],*f=new char[8];
 							  for(unsigned i=0;i<8;i++)
 							  {
@@ -765,7 +785,7 @@ public:void ToBinary(System::Windows::Forms::TextBox^s,bool text){
 							    }
 						    }
 			  
-			  
+			  */
 			  
 			  
 			  
